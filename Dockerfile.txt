@@ -1,0 +1,31 @@
+FROM centos8
+MAINTAINER Joao Rafael Bonilha
+LABEL name="Joao Rafael Bonilha"
+
+# Update e instalacao dos reqs
+RUN yum update -y && \
+	yum config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && \
+	yum install -y docker-ce docker-engine docker-compose wget python3-pip git unzip jq && \
+    yum clean all && \
+    rm -rf /var/cache/yum && \
+	pip install --upgrade awscli s3cmd
+ 
+# Ativacao do Docker
+	systemctl enable --now docker
+
+# Instalacao do Terraform
+ENV TERRAFORM_VERSION 0.12.20
+RUN mkdir -p /opt/terraform
+RUN wget -nc -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -P /opt/terraform
+RUN unzip -q /opt/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /opt/terraform
+ENV PATH $PATH:/opt/terraform
+
+# Make directory which will contain the terraform project and expose as volume
+RUN mkdir -p /usr/src/app
+VOLUME /usr/src/app
+
+# Change working directory
+WORKDIR /usr/src/app
+
+
+
