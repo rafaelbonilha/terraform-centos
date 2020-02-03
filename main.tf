@@ -1,6 +1,6 @@
 provider "local"{}
 # Start a container
-resource "docker_container" "application" {
+resource "docker_container" "spaceinv" {
   image = "${docker_image.application.latest}"
   must_run = true
   name  = "application"
@@ -11,6 +11,6 @@ resource "docker_container" "application" {
 }
 
 # Find the latest RHEL precise image.
-resource "docker_image" "application" {
+resource "docker_image" "spaceinv" {
   name = "xer0x/spaceinvaders"
 }
